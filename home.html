@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <!-- COMP 7780 -->
+    <title>Tag One! Online Shop - Home</title>
+    
+    <style type="text/css">
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        
+        header {
+            background-color: #336666;
+            /* background-color: #0052cc; */
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .logo-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .logo {
+            max-width: 300px;
+            height: auto;
+        }
+        
+        .main-title {
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        nav {
+            background-color: #333;
+            overflow: hidden;
+            padding: 0;
+            text-align: center;
+        }
+        
+        nav a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        nav a:hover {
+            background-color: #555;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .intro-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .feature-card {
+            background-color: #f0f8ff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-card h3 {
+            color: #0052cc;
+        }
+        
+        .cta-section {
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: #0052cc;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 1.2em;
+            transition: background-color 0.3s;
+        }
+        
+        .cta-button:hover {
+            background-color: #003da3;
+        }
+        
+        .testimonials {
+            margin: 40px 0;
+        }
+        
+        .testimonial {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #0052cc;
+        }
+        
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="logo.png" class="logo" alt="Company Logo" width="300" height="100">
+            <div>
+                <h1>#1 TAG ONE</h1>
+                <p>Team No: 19,Team Name: Team Cloud</p>
+            </div>
+            <img src="cs_logo.png" class="logo" alt="CS Logo" width="300" height="200">
+        </div>
+    </header>
+
+    <nav>
+        <a href="#">Home</a>
+        <a href="product.html">Products</a>
+        <!-- <a href="#about">About Us</a>
+        <a href="#contact">Contact</a> -->
+    </nav>
+
+    <div class="container">
+        <section class="intro-section">
+            <h2>Company location: Shenzhen</h2>
+            <p>TAG ONE is a vibrant local coffee brand in Shenzhen, which is committed to providing high-quality fresh brewed coffee and bringing a warm and friendly brand experience to all local coffee lovers.</p>
+            <p>Team Member:Li YunHan 25420941 (Manager), Wang KangXu 25457349 (Analyst), Chen YiZhen 25409344 (Developer), Lin JianFeng 25432494 (Tester).</p>
+        </section>
+
+        <section class="features">
+            <div class="feature-card">
+                <h3>🌱 Eco-friendly</h3>
+                <p>Promoting sustainability by recycling and reusing items to reduce waste and protect our environment.</p>
+            </div>
+            
+            <div class="feature-card">
+                <h3>💰 Great Deals</h3>
+                <p>Find amazing discounts on quality recycled products. Save money while helping the planet.</p>
+            </div>
+            
+            <div class="feature-card">
+                <h3>🚚 Fast Delivery</h3>
+                <p>Quick and reliable delivery service after payment confirmation. We bring green products to your door.</p>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <h2>Ready to make a difference?</h2>
+            <p>Browse our collection of products and contribute to a greener planet today!</p>
+            <a href="product.html" class="cta-button">Products</a>
+        </section>
+
+        <!-- <section class="testimonials">
+            <h2>What Our Customers Say</h2>
+            <div class="testimonial">
+                <p>"I love shopping here! Found some unique recycled items for my home at great prices. The delivery was quick too!" - Sarah K.</p>
+            </div>
+            <div class="testimonial">
+                <p>"Great concept and excellent customer service. I feel good knowing my purchases help the environment." - Michael T.</p>
+            </div>
+            <div class="testimonial">
+                <p>"The quality of recycled products is surprisingly high. Will definitely shop again!" - Emma L.</p>
+            </div>
+        </section> -->
+    </div>
+
+    <footer>
+        <p><img src="enews1.jpg" alt="hkbu Logo" width="50" height="50"> Contact me: chenyizhen2025@outlook.com</p>
+    </footer>
+</body>
+</html>
