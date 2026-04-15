@@ -233,17 +233,6 @@
             border-top: 1px solid #eee;
         }
         
-        .checkout-btn {
-            width: 100%;
-            padding: 12px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 1.1em;
-            cursor: pointer;
-        }
-        
         .overlay {
             position: fixed;
             top: 0;
@@ -272,6 +261,11 @@
             z-index: 1001;
         }
         
+        /* 订单提示样式 */
+        .order-success, .order-error {
+            transition: all 0.3s ease;
+        }
+
         footer {
             background-color: #333;
             color: white;
@@ -280,6 +274,8 @@
             margin-top: 30px;
         }
     </style>
+    
+    <script src="https://www.paypal.com/sdk/js?client-id=AbXyuy2i9QMluRm9btyKohNXFUa_7ycXkmMVB-OuJzfrJQMoOdycVQlKnPlmTbvaw6YK4pBxQshnbDZh&currency=HKD&intent=capture&components=buttons"></script>
 </head>
 
 <body>
@@ -297,16 +293,10 @@
     <nav>
         <a href="home.html">Home</a>
         <a href="#">Products</a>
-        <!-- <a href="#about">About Us</a>
-        <a href="#contact">Contact</a> -->
     </nav>
 
     <div class="container">
         <section class="intro-section">
-            <!-- <h2>GreenWorld! Online Shop</h2>
-            <p>Our goal is to promote "Green Environment" by re-cycling the items that you no longer need or use and sell them to the public for a discounted price.</p>
-            <p>All sales Final - No refund or exchange.</p>
-            <p>Once we received your payment, we will contact you for delivery.</p> -->
         </section>
 
         <section class="filters-section">
@@ -349,7 +339,15 @@
         <div class="cart-total">
             Total: $<span id="cart-total">0.00</span>
         </div>
-        <button class="checkout-btn">Checkout with PayPal</button>
+        <!-- PayPal button container -->
+        <div id="paypal-button-container"></div>
+        <!-- Order success message -->
+        <div id="order-success" class="order-success" style="display: none; color: #28a745; text-align: center; margin: 10px 0; font-weight: bold;">
+            Order placed successfully!
+        </div>
+        <div id="order-error" class="order-error" style="display: none; color: #dc3545; text-align: center; margin: 10px 0; font-weight: bold;">
+            Error placing order. Please try again.
+        </div>
     </div>
     
     <div class="overlay" id="overlay"></div>
@@ -369,7 +367,6 @@
             { id: 2, name: "Latte", price: 7.50, quantity: 8, image: "Latte.png", description: "The classic latte is based on rich espresso, with silky steamed milk, and finally covered with a layer of light and delicate milk foam. The taste is as smooth as silk, and the rich coffee aroma is perfectly integrated with the faint milky fragrance - it is the favorite choice of every coffee lover" },
             { id: 3, name: "Espresso", price: 3.99, quantity: 25, image: "Espresso.png", description: "Espresso blends perfectly with silky steamed milk, and the rich coffee aroma and smooth milk aroma achieve a perfect balance. The taste is smooth like velvet, and the taste is mild and easy to drink, which is suitable for every coffee lover" },
             { id: 4, name: "Cappuccino", price: 6.99, quantity: 12, image: "Cappuccino.png", description: "Classic cappuccino, a perfect blend of rich espresso, silky steamed milk and fluffy milk foam. The taste is silky and balanced, and the rich coffee aroma is perfectly mixed with the sweetness of the cream. It is the eternal classic choice of coffee lovers" },
-            
         ];
         // Cart state
         let cart = [];
@@ -386,11 +383,15 @@
         const priceFilter = document.getElementById('price-filter');
         const nameSearch = document.getElementById('name-search');
         const notification = document.getElementById('notification');
+        const paypalButtonContainer = document.getElementById('paypal-button-container');
+        const orderSuccess = document.getElementById('order-success');
+        const orderError = document.getElementById('order-error');
 
         // Initialize the page
         function init() {
             renderProducts(products);
             setupEventListeners();
+            initPayPalButton(); // Initialize PayPal button
         }
 
         // Render products to the grid
@@ -466,6 +467,9 @@
             
             // Update total
             cartTotal.textContent = total.toFixed(2);
+            
+            // Reinitialize PayPal button after cart change
+            initPayPalButton();
         }
 
         // Remove item from cart
@@ -541,6 +545,130 @@
             // Filter events
             priceFilter.addEventListener('change', filterProducts);
             nameSearch.addEventListener('input', filterProducts);
+        }
+
+        // Initialize PayPal checkout button with current cart
+        function initPayPalButton() {
+            // Clear existing button
+            paypalButtonContainer.innerHTML = '';
+            
+            // Show notification if cart is empty
+            if (cart.length === 0) {
+                paypalButtonContainer.innerHTML = '<p style="text-align:center; color:#666;">Add items to cart to checkout</p>';
+                return;
+            }
+
+            // Check if PayPal SDK is loaded
+            if (!window.paypal) {
+                paypalButtonContainer.innerHTML = '<p style="text-align:center; color:#dc3545;">PayPal checkout unavailable</p>';
+                return;
+            }
+
+            
+            paypal.Buttons({
+                // Create order
+                createOrder: async (data, actions) => {
+                    try {
+                        // Calculate total order amount in HKD
+                        const orderTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2);
+                        
+                        
+                        const response = await fetch('/api/create-order', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                items: cart.map(item => ({
+                                    id: item.id,
+                                    name: item.name,
+                                    price: item.price,
+                                    quantity: item.quantity
+                                })),
+                                total: orderTotal,
+                                currency: 'HKD'
+                            })
+                        });
+
+                        if (!response.ok) {
+                            throw new Error('Failed to create order from backend');
+                        }
+
+                        const orderData = await response.json();
+                        
+                        
+                        return actions.order.create({
+                            purchase_units: [{
+                                reference_id: orderData.orderId || `cart-order-${Date.now()}`,
+                                amount: {
+                                    currency_code: 'HKD',
+                                    value: orderTotal
+                                }
+                            }]
+                        });
+                    } catch (error) {
+                        console.error('PayPal createOrder error:', error);
+                        orderError.style.display = 'block';
+                        setTimeout(() => orderError.style.display = 'none', 3000);
+                        throw error; 
+                    }
+                },
+
+                // 确认订单
+                onApprove: async (data, actions) => {
+                    try {
+                        
+                        const captureResponse = await actions.order.capture();
+                        
+                        
+                        const saveResponse = await fetch('/api/save-order', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                paypalOrderId: data.orderID,
+                                captureId: captureResponse.purchase_units[0]?.payments?.captures[0]?.id || '',
+                                items: cart.map(item => ({
+                                    id: item.id,
+                                    name: item.name,
+                                    price: item.price,
+                                    quantity: item.quantity
+                                })),
+                                total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2),
+                                currency: 'HKD'
+                            })
+                        });
+
+                        if (!saveResponse.ok) {
+                            throw new Error('Failed to save order to backend');
+                        }
+
+                        
+                        orderSuccess.style.display = 'block';
+                        setTimeout(() => orderSuccess.style.display = 'none', 5000);
+
+                        cart = [];
+                        updateCart();
+
+
+                        cartContainer.classList.remove('active');
+                        overlay.classList.remove('active');
+
+                    } catch (error) {
+                        console.error('PayPal onApprove error:', error);
+                        orderError.style.display = 'block';
+                        setTimeout(() => orderError.style.display = 'none', 3000);
+                    }
+                },
+
+                
+                onError: (err) => {
+                    console.error('PayPal checkout error:', err);
+                    orderError.style.display = 'block';
+                    setTimeout(() => orderError.style.display = 'none', 3000);
+                }
+            }).render('#paypal-button-container');
         }
 
         // Make removeFromCart available globally for inline handlers
