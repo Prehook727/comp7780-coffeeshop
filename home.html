@@ -129,6 +129,55 @@
             border-left: 4px solid #0052cc;
         }
         
+        .team-table {
+            max-width: 600px;
+            margin: 20px auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .table-header {
+            display: flex;
+            background-color: #2c8e8e; 
+            color: white;
+            font-weight: bold;
+        }
+        
+        .table-header > div {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            border-right: 1px solid #fff;
+        }
+        
+        .table-header > div:last-child {
+            border-right: none;
+        }
+        
+        .table-row {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            transition: background-color 0.2s;
+            background-color: #00bbff; 
+        }
+        
+        .table-row:last-child {
+            border-bottom: none;
+        }
+        
+        .table-row > div {
+            flex: 1;
+            padding: 12px;
+            text-align: center; 
+            border-right: 1px solid #ddd;
+        }
+        
+        .table-row > div:last-child {
+            border-right: none;
+        }
+        
         footer {
             background-color: #333;
             color: white;
@@ -162,7 +211,7 @@
         <section class="intro-section">
             <h2>Company location: Shenzhen</h2>
             <p>TAG ONE is a vibrant local coffee brand in Shenzhen, which is committed to providing high-quality fresh brewed coffee and bringing a warm and friendly brand experience to all local coffee lovers.</p>
-            <p>Team Member:Li YunHan 25420941 (Manager), Wang KangXu 25457349 (Analyst), Chen YiZhen 25409344 (Developer), Lin JianFeng 25432494 (Tester).</p>
+            <!-- <p>Team Member:Li YunHan 25420941 (Manager), Wang KangXu 25457349 (Analyst), Chen YiZhen 25409344 (Developer), Lin JianFeng 25432494 (Tester).</p> -->
         </section>
 
         <section class="features">
@@ -201,8 +250,30 @@
             </div>
         </section> -->
     </div>
-
     <footer>
+        <h3>Team Member Information</h3>
+        <div class="team-table">
+            <div class="table-header">
+                <div class="header-name">Name</div>
+                <div class="header-info">ID & Role</div>
+            </div>
+            <div class="table-row">
+                <div class="row-name">Li YunHan</div>
+                <div class="row-info">25420941 (Manager)</div>
+            </div>
+            <div class="table-row">
+                <div class="row-name">Wang KangXu</div>
+                <div class="row-info">25457349 (Analyst)</div>
+            </div>
+            <div class="table-row">
+                <div class="row-name">Chen YiZhen</div>
+                <div class="row-info">25409344 (Developer)</div>
+            </div>
+            <div class="table-row">
+                <div class="row-name">Lin JianFeng</div>
+                <div class="row-info">25432494 (Tester)</div>
+            </div>
+        </div>
         <p><img src="enews1.jpg" alt="hkbu Logo" width="50" height="50"> Contact me: chenyizhen2025@outlook.com</p>
     </footer>
 </body>
